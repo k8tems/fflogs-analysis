@@ -1,5 +1,7 @@
 import time
 import requests
+from datetime import datetime
+from pytz import timezone
 
 
 class APIError(RuntimeError):
@@ -46,10 +48,21 @@ class FightTime(object):
         return self.end - self.start
 
 
+def epoch_to_dt(epoch):
+    dt = datetime.fromtimestamp(epoch)
+    return timezone('Asia/Tokyo').localize(dt)
+
+
 class Report(object):
-    def __init__(self, api, report_id):
+    def __init__(self, api, report_id, start):
         self.api = api
         self.report_id = report_id
+        self.start = start
+
+    @classmethod
+    def create(cls, api, report_id):
+        resp = api.get(f'report/fights/{report_id}')
+        return Report(api, report_id, epoch_to_dt(resp['start']/1000))
 
     def get_fights(self):
         fights = self.api.get(f'report/fights/{self.report_id}')
