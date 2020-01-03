@@ -22,6 +22,7 @@ class TestReport(unittest.TestCase):
         self.assertEqual(create_dt(2020, 1, 2, 22, 6, 40, 38000), report.fights[0].ft.start_dt)
         self.assertEqual(751596, report.fights[0].ft.end_ms)
         self.assertEqual(create_dt(2020, 1, 2, 22, 10, 55, 50000), report.fights[0].ft.end_dt)
+        self.assertEqual(255012, report.fights[0].ft.duration_ms)
 
 
 if __name__ == '__main__':
