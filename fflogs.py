@@ -90,7 +90,8 @@ class Fight(object):
 
 
 def epoch_to_dt(epoch):
-    dt = datetime.fromtimestamp(epoch)
+    """epochはms単位を想定"""
+    dt = datetime.fromtimestamp(epoch/1000)
     return timezone('Asia/Tokyo').localize(dt)
 
 
@@ -105,10 +106,10 @@ class Report(object):
         resp = api.get(f'report/fights/{report_id}')
 
         def create_ft(f):
-            start_dt = epoch_to_dt((resp['start'] + f['start_time']) / 1000)
-            end_dt = epoch_to_dt((resp['start'] + f['end_time']) / 1000)
+            start_dt = epoch_to_dt(resp['start'] + f['start_time'])
+            end_dt = epoch_to_dt(resp['start'] + f['end_time'])
             return FightTime(start_dt, end_dt, f['start_time'], f['end_time'])
 
         fights = [Fight(api, create_ft(f), report_id) for f in resp['fights']]
-        return Report(report_id, fights, start=epoch_to_dt(resp['start'] / 1000))
+        return Report(report_id, fights, start=epoch_to_dt(resp['start']))
 
