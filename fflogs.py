@@ -71,10 +71,14 @@ class Fight(object):
         while 1:
             params['start'] = start
             result = self.api.get(f'report/events/{view}/{self.report_id}', params)['events']
-            if not result:  # いつかレスポンスの仕様変更があるかもしれない
+            # 現時点では最後のデータに到達すると要素が1つの配列が返される仕様だが、
+            # 今後どうなるかわからないので一応空のチェックも行う
+            if not result:
                 break
             yield result
-            if len(result) == 1:  # 追加しておきたいので上の条件と別扱い
+            # 最期のデータに到達して返された要素が1つの配列も結果に追加したいので、
+            # `yield`の後にチェックしてループを抜ける
+            if len(result) == 1:
                 break
             start = result[-1]['timestamp']
             start += 1  # 境界の被り防止
