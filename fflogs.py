@@ -27,8 +27,9 @@ class API(object):
 
 
 class FightTime(object):
-    def __init__(self, start_dt, start_ms, end_ms):
+    def __init__(self, start_dt, end_dt, start_ms, end_ms):
         self.start_dt = start_dt
+        self.end_dt = end_dt
         self.start_ms = start_ms
         self.end_ms = end_ms
 
@@ -63,8 +64,13 @@ class Report(object):
     @classmethod
     def create(cls, api, report_id):
         resp = api.get(f'report/fights/{report_id}')
-        fights = [Fight(api, FightTime(epoch_to_dt((resp['start'] + f['start_time']) / 1000), f['start_time'], f['end_time']), report_id)
-                  for f in resp['fights']]
+
+        def create_ft(f):
+            start_dt = epoch_to_dt((resp['start'] + f['start_time']) / 1000)
+            end_dt = epoch_to_dt((resp['start'] + f['end_time']) / 1000)
+            return FightTime(start_dt, end_dt, f['start_time'], f['end_time'])
+
+        fights = [Fight(api, create_ft(f), report_id) for f in resp['fights']]
         return Report(report_id, fights, start=epoch_to_dt(resp['start'] / 1000))
 
 
