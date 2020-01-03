@@ -112,4 +112,3 @@ class Report(object):
 
         fights = [Fight(api, create_ft(f), report_id) for f in resp['fights']]
         return Report(report_id, fights, start=epoch_to_dt(resp['start']))
-
