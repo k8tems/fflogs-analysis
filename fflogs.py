@@ -50,30 +50,6 @@ class FightTime(object):
         return self.end_s - self.start_s
 
 
-def epoch_to_dt(epoch):
-    dt = datetime.fromtimestamp(epoch)
-    return timezone('Asia/Tokyo').localize(dt)
-
-
-class Report(object):
-    def __init__(self, report_id, fights, start):
-        self.report_id = report_id
-        self.fights = fights
-        self.start = start
-
-    @classmethod
-    def create(cls, api, report_id):
-        resp = api.get(f'report/fights/{report_id}')
-
-        def create_ft(f):
-            start_dt = epoch_to_dt((resp['start'] + f['start_time']) / 1000)
-            end_dt = epoch_to_dt((resp['start'] + f['end_time']) / 1000)
-            return FightTime(start_dt, end_dt, f['start_time'], f['end_time'])
-
-        fights = [Fight(api, create_ft(f), report_id) for f in resp['fights']]
-        return Report(report_id, fights, start=epoch_to_dt(resp['start'] / 1000))
-
-
 class Fight(object):
     def __init__(self, api, ft, report_id):
         self.api = api
@@ -111,3 +87,28 @@ class Fight(object):
             events += chunk
             time.sleep(1)
         return events
+
+
+def epoch_to_dt(epoch):
+    dt = datetime.fromtimestamp(epoch)
+    return timezone('Asia/Tokyo').localize(dt)
+
+
+class Report(object):
+    def __init__(self, report_id, fights, start):
+        self.report_id = report_id
+        self.fights = fights
+        self.start = start
+
+    @classmethod
+    def create(cls, api, report_id):
+        resp = api.get(f'report/fights/{report_id}')
+
+        def create_ft(f):
+            start_dt = epoch_to_dt((resp['start'] + f['start_time']) / 1000)
+            end_dt = epoch_to_dt((resp['start'] + f['end_time']) / 1000)
+            return FightTime(start_dt, end_dt, f['start_time'], f['end_time'])
+
+        fights = [Fight(api, create_ft(f), report_id) for f in resp['fights']]
+        return Report(report_id, fights, start=epoch_to_dt(resp['start'] / 1000))
+
