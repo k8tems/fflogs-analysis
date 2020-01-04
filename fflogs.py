@@ -56,6 +56,10 @@ class Fight(object):
         self.ft = ft
         self.report_id = report_id
 
+    def fix_timestamp(self, e):
+        e['timestamp'] -= self.ft.start_ms
+        return e
+
     def get_tables(self, view, **params):
         # TODO: merge with events
         params = params or dict()
@@ -70,17 +74,18 @@ class Fight(object):
 
         while 1:
             params['start'] = start
-            result = self.api.get(f'report/events/{view}/{self.report_id}', params)['events']
+            events = self.api.get(f'report/events/{view}/{self.report_id}', params)['events']
             # 現時点では最後のデータに到達すると要素が1つの配列が返される仕様だが、
             # 今後どうなるかわからないので一応空のチェックも行う
-            if not result:
+            if not events:
                 break
-            yield result
+            # 下で生のタイムスタンプが参照されてるので`events`を変えてはならない
+            yield [self.fix_timestamp(e) for e in events]
             # 最期のデータに到達して返された要素が1つの配列も結果に追加したいので、
             # `yield`の後にチェックしてループを抜ける
-            if len(result) == 1:
+            if len(events) == 1:
                 break
-            start = result[-1]['timestamp']
+            start = events[-1]['timestamp']  # ここで生のタイムスタンプが参照されてる事に注意
             start += 1  # 境界の被り防止
 
     def get_events(self, *args, **kwargs):
