@@ -27,13 +27,15 @@ class TestReport(unittest.TestCase):
 class TestFight(unittest.TestCase):
     def test(self):
         api = MagicMock()
-        resp_0 = {'events': [{'timestamp': 100}, {'timestamp': 200}]}
-        resp_1 = {'events': [{'timestamp': 300}]}
+        events_0 = [{'timestamp': 100}, {'timestamp': 200}]
+        events_1 = [{'timestamp': 300}]
+        resp_0 = {'events': events_0}
+        resp_1 = {'events': events_1}
         api.get.side_effect = [resp_0, resp_1]
         ft = FightTime(datetime(2019, 1, 1), datetime(2019, 1, 2), 100, 500)
         gen = Fight(api, ft, 'report_id').gen_events('damage-done', foo='bar')
-        next(gen)
-        next(gen)
+        ret_0 = next(gen)
+        ret_1 = next(gen)
 
         self.assertEqual('report/events/damage-done/report_id', api.get.call_args_list[0][0][0])
         self.assertEqual({'foo': 'bar', 'start': 100, 'end': 500}, api.get.call_args_list[0][0][1])
@@ -41,6 +43,9 @@ class TestFight(unittest.TestCase):
         self.assertEqual('report/events/damage-done/report_id', api.get.call_args_list[1][0][0])
         # `start`をインクリメントしないとリストの境界で被りが発生する
         self.assertEqual({'foo': 'bar', 'start': 201, 'end': 500}, api.get.call_args_list[1][0][1])
+
+        self.assertEqual([{'timestamp': 0}, {'timestamp': 100}], ret_0)
+        self.assertEqual([{'timestamp': 200}], ret_1)
 
 
 if __name__ == '__main__':
