@@ -51,7 +51,7 @@ class FightTime(object):
 
 
 class Fight(object):
-    def __init__(self, api, ft, report_id):
+    def __init__(self, api, report_id, ft):
         self.api = api
         self.ft = ft
         self.report_id = report_id
@@ -123,5 +123,5 @@ class Report(object):
             end_dt = epoch_to_dt(resp['start'] + f['end_time'])
             return FightTime(start_dt, end_dt, f['start_time'], f['end_time'])
 
-        fights = [Fight(api, create_ft(f), report_id) for f in resp['fights']]
+        fights = [Fight(api, report_id, create_ft(f)) for f in resp['fights']]
         return Report(report_id, fights, start=epoch_to_dt(resp['start']))
