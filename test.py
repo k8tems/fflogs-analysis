@@ -42,6 +42,7 @@ class TestFight(unittest.TestCase):
         self.assertEqual({'foo': 'bar', 'start': 100, 'end': 500}, api.get.call_args_list[0][0][1])
 
         self.assertEqual('report/events/damage-done/report_id', api.get.call_args_list[1][0][0])
+        # `start`をインクリメントしないとリストの境界で被りが発生する
         self.assertEqual({'foo': 'bar', 'start': 201, 'end': 500}, api.get.call_args_list[1][0][1])
 
 
