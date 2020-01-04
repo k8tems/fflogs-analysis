@@ -74,7 +74,6 @@ class Fight(object):
         return e
 
     def get_tables(self, view, **params):
-        # TODO: merge with events
         params = params or dict()
         params = {**params, **{'start': self.ft.start_ms, 'end': self.ft.end_ms}}
         return self.api.get(f'report/tables/{view}/{self.report_id}', params)
