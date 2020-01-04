@@ -30,11 +30,8 @@ class TestFight(unittest.TestCase):
         resp_0 = {'events': [{'timestamp': 100}, {'timestamp': 200}]}
         resp_1 = {'events': [{'timestamp': 300}]}
         api.get.side_effect = [resp_0, resp_1]
-        start_dt = datetime(2019, 1, 1)
-        end_dt = datetime(2019, 1, 2)
-        ft = FightTime(start_dt, end_dt, 100, 500)
-        fight = Fight(api, ft, 'report_id')
-        gen = fight.gen_events('damage-done', foo='bar')
+        ft = FightTime(datetime(2019, 1, 1), datetime(2019, 1, 2), 100, 500)
+        gen = Fight(api, ft, 'report_id').gen_events('damage-done', foo='bar')
         next(gen)
         next(gen)
 
