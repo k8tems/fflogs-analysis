@@ -35,10 +35,9 @@ class TestFight(unittest.TestCase):
         ft = FightTime(start_dt, end_dt, 100, 500)
         fight = Fight(api, ft, 'report_id')
         gen = fight.gen_events('damage-done', foo='bar')
+        next(gen)
+        next(gen)
 
-        next(gen)
-        next(gen)
-        # api.get.assert_called_with('report/events/damage-done/report_id', {'foo': 'bar', 'start': 100, 'end': 500})
         self.assertEqual('report/events/damage-done/report_id', api.get.call_args_list[0][0][0])
         self.assertEqual({'foo': 'bar', 'start': 100, 'end': 500}, api.get.call_args_list[0][0][1])
 
