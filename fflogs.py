@@ -57,6 +57,8 @@ class Fight(object):
         self.report_id = report_id
 
     def fix_timestamp(self, e):
+        # メソッド内でミューテートしたくないのでコピー
+        e = e.copy()
         e['timestamp'] -= self.ft.start_ms
         return e
 
@@ -73,8 +75,10 @@ class Fight(object):
         params = {**params, **{'end': self.ft.end_ms}}
 
         while 1:
-            params['start'] = start
-            events = self.api.get(f'report/events/{view}/{self.report_id}', params)['events']
+            # パラメータ使いまわしてるとテストのアサーションがうまく行かないのでコピー必須
+            p = params.copy()
+            p['start'] = start
+            events = self.api.get(f'report/events/{view}/{self.report_id}', p)['events']
             # 現時点では最後のデータに到達すると要素が1つの配列が返される仕様だが、
             # 今後どうなるかわからないので一応空のチェックも行う
             if not events:

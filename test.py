@@ -27,18 +27,23 @@ class TestReport(unittest.TestCase):
 class TestFight(unittest.TestCase):
     def test(self):
         api = MagicMock()
-        api.get.return_value = {
-            'events': [{'timestamp': 0}]
-        }
+        resp_0 = {'events': [{'timestamp': 100}, {'timestamp': 200}]}
+        resp_1 = {'events': [{'timestamp': 300}]}
+        api.get.side_effect = [resp_0, resp_1]
         start_dt = datetime(2019, 1, 1)
         end_dt = datetime(2019, 1, 2)
-        ft = FightTime(start_dt, end_dt, 0, 0)
+        ft = FightTime(start_dt, end_dt, 100, 500)
         fight = Fight(api, ft, 'report_id')
         gen = fight.gen_events('damage-done', foo='bar')
 
         next(gen)
-        api.get.assert_called_with('report/events/damage-done/report_id', {'foo': 'bar', 'start': 0, 'end': 0})
-        print(api.get.call_args_list[0])
+        next(gen)
+        # api.get.assert_called_with('report/events/damage-done/report_id', {'foo': 'bar', 'start': 100, 'end': 500})
+        self.assertEqual('report/events/damage-done/report_id', api.get.call_args_list[0][0][0])
+        self.assertEqual({'foo': 'bar', 'start': 100, 'end': 500}, api.get.call_args_list[0][0][1])
+
+        self.assertEqual('report/events/damage-done/report_id', api.get.call_args_list[1][0][0])
+        self.assertEqual({'foo': 'bar', 'start': 201, 'end': 500}, api.get.call_args_list[1][0][1])
 
 
 if __name__ == '__main__':
