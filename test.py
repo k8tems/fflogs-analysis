@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
+from datetime import timedelta
 import pytz
 from fflogs import *
 
@@ -47,6 +48,12 @@ class TestFight(unittest.TestCase):
         # 開始時間に対して相対的なタイムスタンプに変換されてるはず
         self.assertEqual([{'timestamp': 0}, {'timestamp': 100}], ret_0)
         self.assertEqual([{'timestamp': 200}], ret_1)
+
+    def test_repr(self):
+        start_dt = datetime(year=2019, month=12, day=31, hour=10, minute=1)
+        end_dt = start_dt + timedelta(seconds=63)
+        ft = FightTime(start_dt, end_dt, start_ms=100, end_ms=500)
+        self.assertEqual('Fight(start=10:01, duration=1:03)', repr(Fight(None, None, ft)))
 
 
 if __name__ == '__main__':
