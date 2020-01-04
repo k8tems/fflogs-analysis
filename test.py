@@ -52,8 +52,8 @@ class TestFight(unittest.TestCase):
     def test_repr(self):
         start_dt = datetime(year=2019, month=12, day=31, hour=10, minute=1)
         end_dt = start_dt + timedelta(seconds=63)
-        ft = FightTime(start_dt, end_dt, start_ms=100, end_ms=500)
-        self.assertEqual('Fight(start=10:01, duration=1:03)', repr(Fight(None, None, ft)))
+        ft = FightTime(start_dt, end_dt, start_ms=100, end_ms=63100)
+        self.assertEqual('Fight(start=10:01, duration=01:03)', repr(Fight(None, None, ft)))
 
 
 if __name__ == '__main__':

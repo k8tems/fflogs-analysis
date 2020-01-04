@@ -34,6 +34,14 @@ class FightTime(object):
         self.end_ms = end_ms
 
     @property
+    def start_fmt(self):
+        return '%02d:%02d' % (self.start_dt.hour, self.start_dt.minute)
+
+    @property
+    def duration_fmt(self):
+        return '%02d:%02d' % (self.duration_s // 60, self.duration_s % 60)
+
+    @property
     def duration_ms(self):
         return self.end_ms - self.start_ms
 
@@ -55,6 +63,9 @@ class Fight(object):
         self.api = api
         self.ft = ft
         self.report_id = report_id
+
+    def __repr__(self):
+        return f'Fight(start={self.ft.start_fmt}, duration={self.ft.duration_fmt})'
 
     def fix_timestamp(self, e):
         # メソッド内でミューテートしたくないのでコピー
