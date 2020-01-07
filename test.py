@@ -44,11 +44,8 @@ class TestReport(unittest.TestCase):
 class TestFight(unittest.TestCase):
     def setUp(self):
         self.api = MagicMock()
-        events_0 = [{'timestamp': 100}, {'timestamp': 200}]
-        events_1 = [{'timestamp': 300}]
-        resp_0 = {'events': events_0}
-        resp_1 = {'events': events_1}
-        self.api.get.side_effect = [resp_0, resp_1]
+        self.api.get.side_effect = [{'events': [{'timestamp': 100}, {'timestamp': 200}]},
+                                    {'events': [{'timestamp': 300}]}]
         start_dt = datetime(2019, 12, 31, 10, 1)
         end_dt = start_dt + timedelta(seconds=63)
         ft = FightTime(start_dt, end_dt, start_ms=100, end_ms=63100)
