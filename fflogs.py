@@ -69,7 +69,7 @@ class Fight(object):
         return f'Fight(start={self.ft.start_fmt}, duration={self.ft.duration_fmt})'
 
     def fix_timestamp(self, e):
-        # メソッド内でミューテートしたくないのでコピー
+        # メソッド内でミューテートしたくない
         e = e.copy()
         e['timestamp'] -= self.ft.start_ms
         return e
