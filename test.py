@@ -16,7 +16,8 @@ class TestReport(unittest.TestCase):
         api.get.return_value = {
             'start': 1577969903454,
             'fights': [{'start_time': 496584, 'end_time': 751596}],
-            'friendlies': {1: {'name': 'foo', 'job': 'bar'}, 2: {'name': 'baz', 'job': 'baaz'}}}
+            'friendlies': [{'guid': 1, 'name': 'foo', 'job': 'bar'},
+                           {'guid': 2, 'name': 'baz', 'job': 'baaz'}]}
         report = Report.create(api, 'report_id')
 
         api.get.assert_called_with('report/fights/report_id')
@@ -39,7 +40,7 @@ class TestFight(unittest.TestCase):
         resp_1 = {'events': events_1}
         api.get.side_effect = [resp_0, resp_1]
         ft = FightTime(datetime(2019, 1, 1), datetime(2019, 1, 2), start_ms=100, end_ms=500)
-        gen = Fight(api, 'report_id', ft).gen_events('damage-done', foo='bar')
+        gen = Fight(api, 'report_id', ft, None).gen_events('damage-done', foo='bar')
         ret_0 = next(gen)
         ret_1 = next(gen)
 
@@ -58,7 +59,7 @@ class TestFight(unittest.TestCase):
         start_dt = datetime(year=2019, month=12, day=31, hour=10, minute=1)
         end_dt = start_dt + timedelta(seconds=63)
         ft = FightTime(start_dt, end_dt, start_ms=100, end_ms=63100)
-        self.assertEqual('Fight(start=10:01, duration=01:03)', repr(Fight(None, None, ft)))
+        self.assertEqual('Fight(start=10:01, duration=01:03)', repr(Fight(None, None, ft, None)))
 
 
 if __name__ == '__main__':
