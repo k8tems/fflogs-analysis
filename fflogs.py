@@ -33,6 +33,9 @@ class FightTime(object):
         self.start_ms = start_ms
         self.end_ms = end_ms
 
+    def __repr__(self):
+        return f'FightTime(start={self.start_fmt}, duration={self.duration_fmt})'
+
     @property
     def start_fmt(self):
         return '%02d:%02d' % (self.start_dt.hour, self.start_dt.minute)
@@ -66,7 +69,7 @@ class Fight(object):
         self.ft = ft
 
     def __repr__(self):
-        return f'Fight(start={self.ft.start_fmt}, duration={self.ft.duration_fmt})'
+        return f'Fight(ft={self.ft})'
 
     def fix_timestamp(self, e):
         # メソッド内でミューテートしたくない

@@ -72,7 +72,7 @@ class TestFight(unittest.TestCase):
         self.assertEqual([{'timestamp': 200}], ret_1)
 
     def test_repr(self):
-        self.assertEqual('Fight(start=10:01, duration=01:03)', repr(self.f))
+        self.assertEqual('Fight(ft=FightTime(start=10:01, duration=01:03))', repr(self.f))
 
 
 if __name__ == '__main__':
