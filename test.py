@@ -11,24 +11,27 @@ def create_dt(*args, **kwargs):
 
 
 class TestReport(unittest.TestCase):
-    def test(self):
-        api = MagicMock()
-        api.get.return_value = {
+    def setUp(self):
+        self.api = MagicMock()
+        self.api.get.return_value = {
             'start': 1577969903454,
             'fights': [{'start_time': 496584, 'end_time': 751596}],
             'friendlies': [{'guid': 1, 'name': 'foo', 'job': 'bar'},
                            {'guid': 2, 'name': 'baz', 'job': 'baaz'}]}
-        report = Report.create(api, 'report_id')
+        self.report = Report.create(self.api, 'report_id')
 
-        api.get.assert_called_with('report/fights/report_id')
-        self.assertEqual(create_dt(2020, 1, 2, 21, 58, 23, 454000), report.start)
-        self.assertEqual(496584, report.fights[0].ft.start_ms)
-        self.assertEqual(create_dt(2020, 1, 2, 22, 6, 40, 38000), report.fights[0].ft.start_dt)
-        self.assertEqual(751596, report.fights[0].ft.end_ms)
-        self.assertEqual(create_dt(2020, 1, 2, 22, 10, 55, 50000), report.fights[0].ft.end_dt)
+    def test_report(self):
+        self.api.get.assert_called_with('report/fights/report_id')
+        self.assertEqual(create_dt(2020, 1, 2, 21, 58, 23, 454000), self.report.start)
 
+    def test_fight(self):
+        f = self.report.fights[0]
+        self.assertEqual(496584, f.ft.start_ms)
+        self.assertEqual(create_dt(2020, 1, 2, 22, 6, 40, 38000), f.ft.start_dt)
+        self.assertEqual(751596, f.ft.end_ms)
+        self.assertEqual(create_dt(2020, 1, 2, 22, 10, 55, 50000), f.ft.end_dt)
         self.assertEqual({1: {'name': 'foo', 'job': 'bar'}, 2: {'name': 'baz', 'job': 'baaz'}},
-                         report.fights[0].players)
+                         f.players)
 
 
 class TestFight(unittest.TestCase):
