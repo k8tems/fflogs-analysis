@@ -44,8 +44,8 @@ class TestReport(unittest.TestCase):
 class TestFight(unittest.TestCase):
     def setUp(self):
         self.api = MagicMock()
-        self.api.get.side_effect = [{'events': [{'timestamp': 100}, {'timestamp': 200}]},
-                                    {'events': [{'timestamp': 300}]}]
+        self.api.get.side_effect = [{'events': [{'timestamp': 100, 'foo': 'bar'}, {'timestamp': 200, 'baz': 'baaz'}]},
+                                    {'events': [{'timestamp': 300, 'qux': 'quux'}]}]
         start_dt = datetime(2019, 12, 31, 10, 1)
         end_dt = start_dt + timedelta(seconds=63)
         ft = FightTime(start_dt, end_dt, start_ms=100, end_ms=63100)
@@ -65,8 +65,10 @@ class TestFight(unittest.TestCase):
         self.assertEqual({'foo': 'bar', 'start': 201, 'end': 63100}, self.api.get.call_args_list[1][0][1])
 
         # 開始時間に対して相対的なタイムスタンプ(秒)に変換されてるはず
-        self.assertEqual([{'timestamp': 0}, {'timestamp': .1}], ret_0)
-        self.assertEqual([{'timestamp': .2}], ret_1)
+        # elapsed以外のデータもきちんと保存されてるか確認
+        self.assertEqual([{'elapsed': 0, 'timestamp': 100, 'foo': 'bar'},
+                          {'elapsed': .1, 'timestamp': 200, 'baz': 'baaz'}], ret_0)
+        self.assertEqual([{'elapsed': .2, 'timestamp': 300, 'qux': 'quux'}], ret_1)
 
     def test_repr(self):
         self.assertEqual('Fight(ft=FightTime(start=10:01, duration=01:03))', repr(self.f))
