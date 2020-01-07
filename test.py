@@ -14,7 +14,9 @@ class TestReport(unittest.TestCase):
     def test(self):
         api = MagicMock()
         api.get.return_value = {
-            'start': 1577969903454, 'fights': [{'start_time': 496584, 'end_time': 751596}]}
+            'start': 1577969903454,
+            'fights': [{'start_time': 496584, 'end_time': 751596}],
+            'friendlies': {1: {'name': 'foo', 'job': 'bar'}, 2: {'name': 'baz', 'job': 'baaz'}}}
         report = Report.create(api, 'report_id')
 
         api.get.assert_called_with('report/fights/report_id')
@@ -23,6 +25,9 @@ class TestReport(unittest.TestCase):
         self.assertEqual(create_dt(2020, 1, 2, 22, 6, 40, 38000), report.fights[0].ft.start_dt)
         self.assertEqual(751596, report.fights[0].ft.end_ms)
         self.assertEqual(create_dt(2020, 1, 2, 22, 10, 55, 50000), report.fights[0].ft.end_dt)
+
+        self.assertEqual({1: {'name': 'foo', 'job': 'bar'}, 2: {'name': 'baz', 'job': 'baaz'}},
+                         report.fights[0].players)
 
 
 class TestFight(unittest.TestCase):
