@@ -134,6 +134,12 @@ class Report(object):
 
     @staticmethod
     def create_ft(report_start, fight_start, fight_end):
+        """
+        :param report_start: レポートの作成時間
+        :param fight_start: 戦闘の開始時間(`report_start`相対ms)
+        :param fight_end: 戦闘終了時間
+        ※`report_start`は`Report`の範疇なので当関数を`Fight`に移動したくない
+        """
         start_dt = epoch_to_dt(report_start + fight_start)
         end_dt = epoch_to_dt(report_start + fight_end)
         return FightTime(start_dt, end_dt, fight_start, fight_end)
