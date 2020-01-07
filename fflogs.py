@@ -132,15 +132,18 @@ class Report(object):
         self.fights = fights
         self.start = start
 
+    @staticmethod
+    def create_ft(report_start, fight_start, fight_end):
+        start_dt = epoch_to_dt(report_start + fight_start)
+        end_dt = epoch_to_dt(report_start + fight_end)
+        return FightTime(start_dt, end_dt, fight_start, fight_end)
+
     @classmethod
     def create(cls, api, report_id):
         resp = api.get(f'report/fights/{report_id}')
         players = parse_players(resp['friendlies'])
 
-        def create_ft(f):
-            start_dt = epoch_to_dt(resp['start'] + f['start_time'])
-            end_dt = epoch_to_dt(resp['start'] + f['end_time'])
-            return FightTime(start_dt, end_dt, f['start_time'], f['end_time'])
-
-        fights = [Fight(api, report_id, create_ft(f), players) for f in resp['fights']]
+        fights = [Fight(api, report_id,
+                        cls.create_ft(resp['start'], f['start_time'], f['end_time']), players)
+                  for f in resp['fights']]
         return Report(report_id, fights, start=epoch_to_dt(resp['start']))
