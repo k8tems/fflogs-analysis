@@ -64,9 +64,9 @@ class TestFight(unittest.TestCase):
         # `start`をインクリメントしないとリストの境界で被りが発生する
         self.assertEqual({'foo': 'bar', 'start': 201, 'end': 63100}, self.api.get.call_args_list[1][0][1])
 
-        # 開始時間に対して相対的なタイムスタンプに変換されてるはず
-        self.assertEqual([{'timestamp': 0}, {'timestamp': 100}], ret_0)
-        self.assertEqual([{'timestamp': 200}], ret_1)
+        # 開始時間に対して相対的なタイムスタンプ(秒)に変換されてるはず
+        self.assertEqual([{'timestamp': 0}, {'timestamp': .1}], ret_0)
+        self.assertEqual([{'timestamp': .2}], ret_1)
 
     def test_repr(self):
         self.assertEqual('Fight(ft=FightTime(start=10:01, duration=01:03))', repr(self.f))

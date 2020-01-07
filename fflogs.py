@@ -75,6 +75,7 @@ class Fight(object):
         # メソッド内でミューテートしたくない
         e = e.copy()
         e['timestamp'] -= self.ft.start_ms
+        e['timestamp'] /= 1000
         return e
 
     def get_tables(self, view, **params):
