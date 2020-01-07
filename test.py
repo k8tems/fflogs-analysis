@@ -52,7 +52,8 @@ class TestFight(unittest.TestCase):
         start_dt = datetime(2019, 12, 31, 10, 1)
         end_dt = start_dt + timedelta(seconds=63)
         ft = FightTime(start_dt, end_dt, start_ms=100, end_ms=63100)
-        self.f = Fight(self.api, 'report_id', ft, None)
+        players = None
+        self.f = Fight(self.api, 'report_id', players, ft)
 
     def test_gen_events(self):
         gen = self.f.gen_events('damage-done', foo='bar')

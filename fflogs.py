@@ -59,11 +59,11 @@ class FightTime(object):
 
 
 class Fight(object):
-    def __init__(self, api, report_id, ft, players):
+    def __init__(self, api, report_id, players, ft):
         self.api = api
-        self.ft = ft
         self.report_id = report_id
         self.players = players
+        self.ft = ft
 
     def __repr__(self):
         return f'Fight(start={self.ft.start_fmt}, duration={self.ft.duration_fmt})'
@@ -143,7 +143,7 @@ class Report(object):
         resp = api.get(f'report/fights/{report_id}')
         players = parse_players(resp['friendlies'])
 
-        fights = [Fight(api, report_id,
-                        cls.create_ft(resp['start'], f['start_time'], f['end_time']), players)
+        fights = [Fight(api, report_id, players,
+                        cls.create_ft(resp['start'], f['start_time'], f['end_time']))
                   for f in resp['fights']]
         return Report(report_id, fights, start=epoch_to_dt(resp['start']))
