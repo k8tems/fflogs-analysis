@@ -27,6 +27,7 @@ class TestReport(unittest.TestCase):
         self.assertEqual(751596, report.fights[0].ft.end_ms)
         self.assertEqual(create_dt(2020, 1, 2, 22, 10, 55, 50000), report.fights[0].ft.end_dt)
 
+        self.assertEqual(report.fights[1].players, report.fights[0].players)
         self.assertEqual({1: {'name': 'foo', 'job': 'bar'}, 2: {'name': 'baz', 'job': 'baaz'}},
                          report.fights[0].players)
 
