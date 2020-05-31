@@ -16,8 +16,10 @@ class TestReport(unittest.TestCase):
         self.api.get.return_value = {
             'start': 1577969903454,
             'fights': [{'start_time': 496584, 'end_time': 751596}, {'start_time': 752596, 'end_time': 753596}],
-            'friendlies': [{'guid': 1, 'name': 'foo', 'job': 'bar'},
-                           {'guid': 2, 'name': 'baz', 'job': 'baaz'}]}
+            'friendlies': [
+                {'guid': 1, 'name': 'foo', 'type': 'bar', 'id': 0},
+                {'guid': 2, 'name': 'baz', 'type': 'baaz', 'id': 0}],
+            'friendlyPets': []}
         self.report = Report.create(self.api, 'report_id')
 
     def test_report(self):
@@ -30,7 +32,8 @@ class TestReport(unittest.TestCase):
         self.assertEqual(create_dt(2020, 1, 2, 22, 6, 40, 38000), f.ft.start_dt)
         self.assertEqual(751596, f.ft.end_ms)
         self.assertEqual(create_dt(2020, 1, 2, 22, 10, 55, 50000), f.ft.end_dt)
-        self.assertEqual({1: {'name': 'foo', 'job': 'bar'}, 2: {'name': 'baz', 'job': 'baaz'}},
+        self.assertEqual([{'guid': 1, 'name': 'foo', 'class': 'bar', 'id': 0, 'pets': []},
+                          {'guid': 2, 'name': 'baz', 'class': 'baaz', 'id': 0, 'pets': []}],
                          f.players)
 
     def test_second_fight(self):
@@ -66,9 +69,9 @@ class TestFight(unittest.TestCase):
 
         # 開始時間に対して相対的なタイムスタンプ(秒)に変換されてるはず
         # elapsed以外のデータもきちんと保存されてるか確認
-        self.assertEqual([{'elapsed': 0, 'timestamp': 100, 'foo': 'bar'},
-                          {'elapsed': .1, 'timestamp': 200, 'baz': 'baaz'}], ret_0)
-        self.assertEqual([{'elapsed': .2, 'timestamp': 300, 'qux': 'quux'}], ret_1)
+        self.assertEqual([{'timestamp': 0, 'foo': 'bar'},
+                          {'timestamp': 100, 'baz': 'baaz'}], ret_0)
+        self.assertEqual([{'timestamp': 200, 'qux': 'quux'}], ret_1)
 
     def test_repr(self):
         self.assertEqual('Fight(ft=FightTime(start=10:01, duration=01:03))', repr(self.f))
