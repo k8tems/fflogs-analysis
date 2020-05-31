@@ -74,7 +74,7 @@ class Fight(object):
     def fix_timestamp(self, e):
         # メソッド内でミューテートしたくない
         e = e.copy()
-        e['elapsed'] = (e['timestamp'] - self.ft.start_ms) / 1000
+        e['timestamp'] -= self.ft.start_ms
         return e
 
     def get_tables(self, view, **params):
@@ -122,11 +122,26 @@ def epoch_to_dt(epoch):
     return timezone('Asia/Tokyo').localize(dt)
 
 
-def parse_players(friendlies):
-    resp = dict()
-    for f in friendlies:
-        resp[f['guid']] = {'name': f['name'], 'job': f['job']}
-    return resp
+class PlayerPool(list):
+    def search_by_class(self, c):
+        for p in self:
+            if p['class'] == c:
+                return p
+
+    def search_by_id(self, id):
+        for p in self:
+            if p['id'] == id:
+                return p
+
+
+def parse_players(resp):
+    ret = PlayerPool()
+    for f in resp['friendlies']:
+        ret.append({'name': f['name'], 'class': f['type'],
+                     'guid': f['guid'], 'id': f['id'], 'pets': []})
+    for f in resp['friendlyPets']:
+        ret.search_by_id(f['petOwner'])['pets'].append(f['guid'])
+    return ret
 
 
 class Report(object):
@@ -150,7 +165,7 @@ class Report(object):
     @classmethod
     def create(cls, api, report_id):
         resp = api.get(f'report/fights/{report_id}')
-        players = parse_players(resp['friendlies'])
+        players = parse_players(resp)
 
         fights = [Fight(api, report_id, players,
                         cls.create_ft(resp['start'], f['start_time'], f['end_time']))
