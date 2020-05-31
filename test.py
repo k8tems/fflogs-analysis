@@ -37,7 +37,7 @@ class TestReport(unittest.TestCase):
                          f.players)
 
     def test_second_fight(self):
-        # 2つ目の戦闘は処理されてる事実だけテスト
+        # 2つ目の戦闘が処理されてる事実だけテスト
         f = self.report.fights[1]
         self.assertEqual(752596, f.ft.start_ms)
         self.assertEqual(753596, f.ft.end_ms)
