@@ -130,9 +130,11 @@ class PlayerPool(list):
         matches = []
         for p in self:
             match = False
-            if class_:
+            if class_ and name:
+                match = p['class'] == class_ and p['name'] == name
+            elif class_:
                 match = p['class'] == class_
-            if name:
+            elif name:
                 match = p['name'] == name
             if match:
                 matches.append(p)
