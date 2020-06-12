@@ -77,5 +77,32 @@ class TestFight(unittest.TestCase):
         self.assertEqual('Fight(ft=FightTime(start=10:01, duration=01:03))', repr(self.f))
 
 
+class TestPlayerPool(unittest.TestCase):
+    def test_search_by_class_and_name(self):
+        fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'},
+                   {'class': 'WhiteMage', 'id': 2, 'name': 'Yoshida'},
+                   {'class': 'DarkKnight', 'id': 3, 'name': 'Oshida'}]
+        self.assertEqual(fixture[0], PlayerPool(fixture).search(class_='DarkKnight', name='Yoshida'))
+
+    def test_search_by_class(self):
+        fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'},
+                   {'class': 'WhiteMage', 'id': 2, 'name': 'Yoshida'}]
+        self.assertEqual(fixture[0], PlayerPool(fixture).search(class_='DarkKnight'))
+
+    def test_search_by_name(self):
+        fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'},
+                   {'class': 'DarkKnight', 'id': 2, 'name': 'Oshida'}]
+        self.assertEqual(fixture[0], PlayerPool(fixture).search(name='Yoshida'))
+
+    def test_multiple_results(self):
+        fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'},
+                   {'class': 'WhiteMage', 'id': 2, 'name': 'Yoshida'}]
+        self.assertRaises(PlayerPool.MultipleResults, PlayerPool(fixture).search(name='Yoshida'))
+
+    def test_return_none_for_no_matches(self):
+        fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'}]
+        self.assertIsNone(PlayerPool(fixture).search(name='Oshida'))
+
+
 if __name__ == '__main__':
     unittest.main()
