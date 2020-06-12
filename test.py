@@ -97,7 +97,7 @@ class TestPlayerPool(unittest.TestCase):
     def test_multiple_results(self):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'},
                    {'class': 'WhiteMage', 'id': 2, 'name': 'Yoshida'}]
-        self.assertRaises(PlayerPool.MultipleResults, PlayerPool(fixture).search(name='Yoshida'))
+        self.assertRaises(PlayerPool.MultipleMatches, PlayerPool(fixture).search, name='Yoshida')
 
     def test_return_none_for_no_matches(self):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'}]
