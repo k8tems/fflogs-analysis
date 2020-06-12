@@ -143,11 +143,6 @@ class PlayerPool(list):
         if len(matches):
             return matches[0]
 
-    def search_by_class(self, c):
-        for p in self:
-            if p['class'] == c:
-                return p
-
     def search_by_id(self, id):
         for p in self:
             if p['id'] == id:
