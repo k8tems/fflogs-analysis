@@ -95,7 +95,7 @@ class TestPlayerPool(unittest.TestCase):
     def test_search_by_name(self):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'},
                    {'class': 'DarkKnight', 'id': 2, 'name': 'Oshida'}]
-        self.assertEqual(fixture[0], PlayerPool(fixture).search(name='Yoshida'))
+        self.assertEqual(fixture[0], self.search(fixture, name='Yoshida'))
 
     def test_multiple_results(self):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'},
@@ -104,7 +104,7 @@ class TestPlayerPool(unittest.TestCase):
 
     def test_return_none_for_no_matches(self):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'}]
-        self.assertIsNone(PlayerPool(fixture).search(name='Oshida'))
+        self.assertIsNone(self.search(fixture, name='Oshida'))
 
 
 if __name__ == '__main__':
