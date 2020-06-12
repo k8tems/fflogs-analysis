@@ -139,7 +139,7 @@ class PlayerPool(list):
             if match:
                 matches.append(p)
         if len(matches) >= 2:
-            raise self.MultipleMatches('')
+            raise self.MultipleMatches(matches)
         if len(matches):
             return matches[0]
 
