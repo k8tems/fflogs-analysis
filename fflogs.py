@@ -123,6 +123,24 @@ def epoch_to_dt(epoch):
 
 
 class PlayerPool(list):
+    class MultipleMatches(RuntimeError):
+        pass
+
+    def search(self, class_=None, name=None):
+        matches = []
+        for p in self:
+            match = False
+            if class_:
+                match = p['class'] == class_
+            if name:
+                match = p['name'] == name
+            if match:
+                matches.append(p)
+        if len(matches) >= 2:
+            raise self.MultipleMatches('')
+        if len(matches):
+            return matches[0]
+
     def search_by_class(self, c):
         for p in self:
             if p['class'] == c:
