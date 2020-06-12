@@ -127,6 +127,7 @@ class PlayerPool(list):
         pass
 
     def is_match(self, p, class_=None, name=None):
+        # TODO: 汎用化してidも条件に含められないか
         if class_ and name:
             return p['class'] == class_ and p['name'] == name
         elif class_:
