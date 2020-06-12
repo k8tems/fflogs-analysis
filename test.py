@@ -78,16 +78,19 @@ class TestFight(unittest.TestCase):
 
 
 class TestPlayerPool(unittest.TestCase):
+    def search(self, fixture, *args, **kwargs):
+        return PlayerPool(fixture).search(*args, **kwargs)
+
     def test_search_by_class_and_name(self):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'},
                    {'class': 'WhiteMage', 'id': 2, 'name': 'Yoshida'},
                    {'class': 'DarkKnight', 'id': 3, 'name': 'Oshida'}]
-        self.assertEqual(fixture[0], PlayerPool(fixture).search(class_='DarkKnight', name='Yoshida'))
+        self.assertEqual(fixture[0], self.search(fixture, class_='DarkKnight', name='Yoshida'))
 
     def test_search_by_class(self):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'},
                    {'class': 'WhiteMage', 'id': 2, 'name': 'Yoshida'}]
-        self.assertEqual(fixture[0], PlayerPool(fixture).search(class_='DarkKnight'))
+        self.assertEqual(fixture[0], self.search(fixture, class_='DarkKnight'))
 
     def test_search_by_name(self):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'},
@@ -97,7 +100,7 @@ class TestPlayerPool(unittest.TestCase):
     def test_multiple_results(self):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'},
                    {'class': 'WhiteMage', 'id': 2, 'name': 'Yoshida'}]
-        self.assertRaises(PlayerPool.MultipleMatches, PlayerPool(fixture).search, name='Yoshida')
+        self.assertRaises(PlayerPool.MultipleMatches, self.search, fixture, name='Yoshida')
 
     def test_return_none_for_no_matches(self):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'}]
