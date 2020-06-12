@@ -126,18 +126,18 @@ class PlayerPool(list):
     class MultipleMatches(RuntimeError):
         pass
 
+    def is_match(self, p, class_=None, name=None):
+        if class_ and name:
+            return p['class'] == class_ and p['name'] == name
+        elif class_:
+            return p['class'] == class_
+        elif name:
+            return p['name'] == name
+        else:
+            return False
+
     def search(self, class_=None, name=None):
-        matches = []
-        for p in self:
-            match = False
-            if class_ and name:
-                match = p['class'] == class_ and p['name'] == name
-            elif class_:
-                match = p['class'] == class_
-            elif name:
-                match = p['name'] == name
-            if match:
-                matches.append(p)
+        matches = [p for p in self if self.is_match(p, class_, name)]
         if len(matches) >= 2:
             raise self.MultipleMatches(matches)
         if len(matches):
