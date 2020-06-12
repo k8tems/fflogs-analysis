@@ -106,6 +106,10 @@ class TestPlayerPool(unittest.TestCase):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'}]
         self.assertIsNone(self.search(fixture, name='Oshida'))
 
+    def test_return_none_is_class_and_name_is_unspecified(self):
+        fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'}]
+        self.assertIsNone(self.search(fixture))
+
 
 if __name__ == '__main__':
     unittest.main()
