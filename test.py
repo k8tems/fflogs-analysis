@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 from datetime import timedelta
 import pytz
 from fflogs import *
+from event import *
 
 
 def create_dt(*args, **kwargs):
@@ -109,6 +110,22 @@ class TestPlayerPool(unittest.TestCase):
     def test_return_none_is_class_and_name_is_unspecified(self):
         fixture = [{'class': 'DarkKnight', 'id': 1, 'name': 'Yoshida'}]
         self.assertIsNone(self.search(fixture))
+
+
+class TestSynergy(unittest.TestCase):
+    def test_crit_synergy(self):
+        f = MagicMock(buffs=[1000786, 1001221])
+        self.assertEqual(.2, get_crit_synergy(f))
+
+    def no_crit_synergy_returns_float(self):
+        f = MagicMock(buffs=[])
+        s = get_crit_synergy(f)
+        self.assertEqual(float, type(s))
+        self.assertEqual(0.0, s)
+
+    def test_dh_synergy(self):
+        f = MagicMock(buffs=[1000141])
+        self.assertEqual(.2, get_dh_synergy(f))
 
 
 if __name__ == '__main__':
