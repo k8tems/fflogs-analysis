@@ -114,18 +114,18 @@ class TestPlayerPool(unittest.TestCase):
 
 class TestSynergy(unittest.TestCase):
     def test_crit_synergy(self):
-        f = MagicMock(buffs=[1000786, 1001221])
-        self.assertEqual(.2, get_crit_synergy(f))
+        f = MagicMock(buffs=[1000786, 1001221, 1002216])
+        self.assertEqual(.22, get_crit_synergy(f))
 
-    def no_crit_synergy_returns_float(self):
+    def test_no_crit_synergy_returns_float(self):
         f = MagicMock(buffs=[])
         s = get_crit_synergy(f)
         self.assertEqual(float, type(s))
         self.assertEqual(0.0, s)
 
     def test_dh_synergy(self):
-        f = MagicMock(buffs=[1000141])
-        self.assertEqual(.2, get_dh_synergy(f))
+        f = MagicMock(buffs=[1000141, 1002218])
+        self.assertEqual(.23, get_dh_synergy(f))
 
 
 if __name__ == '__main__':
