@@ -139,6 +139,10 @@ class PlayerPool(list):
             return False
 
     def search(self, class_=None, name=None):
+        """
+        プレイヤーのリストから該当するプレイヤーを一人だけ返す
+        複数存在する場合はエラーを投げる
+        """
         matches = [p for p in self if self.is_match(p, class_, name)]
         if len(matches) >= 2:
             raise self.MultipleMatches(matches)
